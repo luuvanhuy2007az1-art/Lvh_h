@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Welcome | Luu Van Huy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 50%, #1a0a12, #2a0a1e, #0a0a1a);
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+            touch-action: none;
+        }
+
+        /* SAKURA NỀN */
+        .sakura-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .sakura {
+            position: absolute;
+            top: -30px;
+            color: #ffb7c5;
+            font-size: 24px;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            text-shadow: 0 0 12px rgba(255, 150, 200, 0.4);
+            user-select: none;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-30px) rotate(0deg) scale(0.8); opacity: 0.9; }
+            100% { transform: translateY(110vh) rotate(720deg) scale(1.2); opacity: 0.1; }
+        }
+
+        /* GIỌT NƯỚC NỀN */
+        .drop-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .drop {
+            position: absolute;
+            width: 5px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            filter: blur(0.8px);
+            animation: dropFall linear infinite;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.02), inset 0 -2px 4px rgba(255, 255, 255, 0.05);
+            transform: rotate(3deg);
+            will-change: transform, opacity;
+        }
+        .drop::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 30%;
+            width: 20%;
+            height: 25%;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        @keyframes dropFall {
+            0% { transform: translateY(-30px) translateX(0px) scale(0.5) rotate(3deg); opacity: 0.1; }
+            10% { opacity: 0.4; }
+            70% { opacity: 0.4; }
+            100% { transform: translateY(110vh) translateX(var(--drift, 15px)) scale(1.1) rotate(10deg); opacity: 0.02; }
+        }
+
+        /* WELCOME OVERLAY */
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 50%, #1a0a12, #0a0a1a);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .welcome-overlay.hidden {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+
+        .welcome-wrapper {
+            display: flex;
+            gap: 8px;
+            perspective: 800px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .welcome-char {
+            font-size: 72px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffb7c5, #ff8aae, #ff6b9d, #ff4d8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(255, 107, 157, 0.5), 0 0 80px rgba(255, 107, 157, 0.25);
+            -webkit-text-stroke: 1.5px rgba(255, 107, 157, 0.15);
+            opacity: 0;
+            transform: translateY(60px) rotateX(30deg) scale(0.6);
+            animation: charReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            filter: blur(3px);
+            display: inline-block;
+        }
+        .welcome-char:nth-child(1) { animation-delay: 0.05s; }
+        .welcome-char:nth-child(2) { animation-delay: 0.12s; }
+        .welcome-char:nth-child(3) { animation-delay: 0.19s; }
+        .welcome-char:nth-child(4) { animation-delay: 0.26s; }
+        .welcome-char:nth-child(5) { animation-delay: 0.33s; }
+        .welcome-char:nth-child(6) { animation-delay: 0.40s; }
+        .welcome-char:nth-child(7) { animation-delay: 0.47s; }
+
+        .welcome-char::after {
+            content: attr(data-char);
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #ffb7c5, #ff8aae, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: blur(30px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: charGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes charReveal {
+            0% { opacity: 0; transform: translateY(60px) rotateX(30deg) scale(0.6); filter: blur(3px); }
+            50% { opacity: 0.9; transform: translateY(-10px) rotateX(-3deg) scale(1.05); filter: blur(0.5px); }
+            70% { transform: translateY(5px) rotateX(1deg) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0px) rotateX(0deg) scale(1); filter: blur(0px); }
+        }
+        @keyframes charGlow {
+            0% { opacity: 0.15; filter: blur(20px); transform: scale(0.95); }
+            100% { opacity: 0.4; filter: blur(40px); transform: scale(1.05); }
+        }
+
+        /* CARD */
+        .card {
+            position: relative;
+            z-index: 2;
+            max-width: 620px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px) saturate(1.2);
+            -webkit-backdrop-filter: blur(16px) saturate(1.2);
+            border-radius: 40px;
+            padding: 42px 30px 38px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background-clip: padding-box;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, opacity 1s ease;
+            overflow: hidden;
+            transform: perspective(1200px) rotateY(0deg) rotateX(0deg);
+            will-change: transform;
+            opacity: 0;
+            animation: cardFadeIn 1s ease 2.3s forwards;
+            cursor: pointer;
+        }
+
+        @keyframes cardFadeIn {
+            0% { opacity: 0; transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(0.96) translateY(20px); }
+            100% { opacity: 1; transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1) translateY(0px); }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 42px;
+            padding: 2px;
+            background: linear-gradient(135deg, #ff6b9d, #ffb7c5, #ffffff, #ffb7c5, #ff6b9d, #ffffff, #ff6b9d);
+            background-size: 400% 400%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: borderRun 3.5s linear infinite;
+            opacity: 0.5;
+        }
+
+        @keyframes borderRun {
+            0% { background-position: 0% 50%; opacity: 0.5; }
+            25% { background-position: 100% 0%; opacity: 0.8; }
+            50% { background-position: 100% 100%; opacity: 0.5; }
+            75% { background-position: 0% 100%; opacity: 0.8; }
+            100% { background-position: 0% 50%; opacity: 0.5; }
+        }
+
+        /* GIỌT NƯỚC BÁM TRÊN MENU */
+        .card-drops {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+        .card-drop {
+            position: absolute;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: rgba(255, 255, 255, 0.06);
+            filter: blur(1px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.02), inset 0 -2px 6px rgba(255, 255, 255, 0.04);
+            animation: dropIdle 4.5s ease-in-out infinite alternate;
+            transform-origin: center;
+        }
+        .card-drop::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 20%;
+            width: 30%;
+            height: 22%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        @keyframes dropIdle {
+            0% { transform: translateY(0px) scale(1) rotate(0deg); opacity: 0.15; }
+            40% { transform: translateY(-4px) scale(1.03) rotate(2deg); opacity: 0.35; }
+            70% { transform: translateY(-2px) scale(1.01) rotate(-1deg); opacity: 0.25; }
+            100% { transform: translateY(0px) scale(1) rotate(0deg); opacity: 0.15; }
+        }
+
+        /* ===== HIỆU ỨNG SAKURA + KIM TUYẾN KHI CLICK ===== */
+        .click-effect-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .click-sakura {
+            position: absolute;
+            font-size: 28px;
+            opacity: 0;
+            animation: clickSakuraFall 2.2s cubic-bezier(0.22, 0.85, 0.36, 1) forwards;
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(255, 150, 200, 0.6);
+        }
+
+        @keyframes clickSakuraFall {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px) translateX(0px) rotate(0deg) scale(0.5);
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(10px) translateX(15px) rotate(20deg) scale(1.1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(60px) translateX(-10px) rotate(180deg) scale(1);
+            }
+            85% {
+                opacity: 0.8;
+                transform: translateY(120px) translateX(20px) rotate(340deg) scale(0.9);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(180px) translateX(5px) rotate(400deg) scale(0.6);
+            }
+        }
+
+        .click-sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff, #ffb7c5, #ff6b9d);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.8), 0 0 60px rgba(255, 107, 157, 0.3);
+            opacity: 0;
+            animation: sparkleBurst 1.2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes sparkleBurst {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) scale(0.2);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(var(--sx, 20px), var(--sy, -30px)) scale(1.2);
+            }
+            60% {
+                opacity: 0.9;
+                transform: translate(var(--sx, 40px), var(--sy, -60px)) scale(0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--sx, 60px), var(--sy, -90px)) scale(0.3);
+            }
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 14px;
+            position: relative;
+            pointer-events: none;
+        }
+        .header h1 {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #ffb7c5, #ff8aae, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(255, 107, 157, 0.3), 0 0 50px rgba(255, 107, 157, 0.12);
+            -webkit-text-stroke: 0.5px rgba(255, 107, 157, 0.10);
+        }
+        .header h1::before {
+            content: 'Welcome';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #ffb7c5, #ff8aae, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: blur(15px);
+            opacity: 0.2;
+            z-index: -1;
+            animation: glowPulse 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes glowPulse {
+            0% { opacity: 0.1; filter: blur(12px); }
+            100% { opacity: 0.3; filter: blur(25px); }
+        }
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 10%;
+            width: 80%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 0.2), transparent);
+            border-radius: 99px;
+            animation: borderRun 2.5s linear infinite;
+        }
+        .header p {
+            color: #d0b0c0;
+            font-size: 13px;
+            margin-top: 2px;
+            letter-spacing: 2.5px;
+            font-weight: 300;
+            opacity: 0.6;
+            -webkit-text-stroke: 0.3px rgba(255, 107, 157, 0.05);
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.10);
+        }
+
+        /* DATETIME */
+        .datetime {
+            text-align: center;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            position: relative;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            pointer-events: none;
+        }
+        .datetime:hover {
+            border-color: rgba(255, 107, 157, 0.12);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.04);
+        }
+        .datetime .time {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 3px;
+            -webkit-text-stroke: 0.3px rgba(255, 107, 157, 0.05);
+            text-shadow: 0 0 15px rgba(255, 107, 157, 0.20), 0 0 30px rgba(255, 107, 157, 0.06);
+        }
+        .datetime .date {
+            font-size: 13px;
+            color: #d0b0c0;
+            margin-top: 2px;
+            letter-spacing: 1.5px;
+            -webkit-text-stroke: 0.2px rgba(255, 107, 157, 0.04);
+            text-shadow: 0 0 8px rgba(255, 107, 157, 0.08);
+        }
+
+        /* MUSIC */
+        .music-section {
+            text-align: center;
+            padding: 12px 0 8px;
+            pointer-events: none;
+        }
+        .song-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffb7c5;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            -webkit-text-stroke: 0.3px rgba(255, 107, 157, 0.06);
+            text-shadow: 0 0 12px rgba(255, 107, 157, 0.15), 0 0 25px rgba(255, 107, 157, 0.05);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+            transition: height 0.2s ease;
+            pointer-events: auto;
+        }
+        .progress-bar:hover {
+            height: 6px;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #ff8aae, #ffb7c5);
+            box-shadow: 0 0 15px rgba(255, 100, 180, 0.10);
+            transition: width 0.1s linear;
+        }
+        .progress-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #8a7a8a;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+        .progress-time span {
+            -webkit-text-stroke: 0.2px rgba(255, 107, 157, 0.03);
+            text-shadow: 0 0 6px rgba(255, 107, 157, 0.05);
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 12px;
+            pointer-events: auto;
+        }
+        .music-btn {
+            padding: 7px 20px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 180, 210, 0.10);
+            background: rgba(255, 180, 210, 0.02);
+            color: #ffb7c5;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.4s ease;
+            letter-spacing: 0.5px;
+            min-width: 90px;
+            position: relative;
+            -webkit-text-stroke: 0.3px rgba(255, 107, 157, 0.05);
+            text-shadow: 0 0 12px rgba(255, 107, 157, 0.12), 0 0 25px rgba(255, 107, 157, 0.04);
+        }
+        .music-btn:hover {
+            background: rgba(255, 180, 210, 0.04);
+            border-color: rgba(255, 107, 157, 0.15);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.06);
+            transform: scale(1.02);
+        }
+        .music-btn:active {
+            transform: scale(0.96);
+        }
+
+        .music-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding: 8px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            pointer-events: none;
+        }
+        .music-info:hover {
+            border-color: rgba(255, 107, 157, 0.10);
+            box-shadow: 0 0 15px rgba(255, 107, 157, 0.02);
+        }
+        .music-info .info-artist {
+            font-size: 12px;
+            color: #ffb7c5;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            -webkit-text-stroke: 0.2px rgba(255, 107, 157, 0.03);
+            text-shadow: 0 0 8px rgba(255, 107, 157, 0.06);
+        }
+        .music-info .info-artist span {
+            color: #d0b0c0;
+            font-weight: 300;
+        }
+        .music-info .info-album {
+            font-size: 11px;
+            color: #6a5a6a;
+            letter-spacing: 0.3px;
+            -webkit-text-stroke: 0.2px rgba(255, 107, 157, 0.03);
+            text-shadow: 0 0 6px rgba(255, 107, 157, 0.04);
+        }
+        .music-info .info-album span {
+            color: #ff8aae;
+            font-weight: 500;
+        }
+
+        /* SOCIAL */
+        .social {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+            pointer-events: auto;
+        }
+        .social a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.01);
+            color: #e0d0e8;
+            position: relative;
+            cursor: pointer;
+        }
+        .social a:hover {
+            transform: translateY(-2px) scale(1.01);
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 107, 157, 0.12);
+            box-shadow: 0 6px 25px rgba(255, 100, 180, 0.04), 0 0 30px rgba(255, 107, 157, 0.04);
+        }
+        .social a .text {
+            flex: 1;
+            -webkit-text-stroke: 0.3px rgba(255, 107, 157, 0.04);
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.08);
+        }
+        .social a .arrow {
+            color: #7a6a8a;
+            font-size: 15px;
+            transition: transform 0.2s ease, color 0.2s ease;
+            -webkit-text-stroke: 0.2px rgba(255, 107, 157, 0.03);
+            text-shadow: 0 0 8px rgba(255, 107, 157, 0.05);
+        }
+        .social a:hover .arrow {
+            transform: translateX(5px);
+            color: #ffb7c5;
+        }
+        .social a .icon {
+            font-size: 20px;
+            width: 32px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.015);
+            position: relative;
+            pointer-events: none;
+        }
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 20%;
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 0.08), transparent);
+            border-radius: 99px;
+            animation: borderRun 2.5s linear infinite;
+        }
+        .footer p {
+            font-size: 11px;
+            color: #6a5a6a;
+            letter-spacing: 1px;
+            -webkit-text-stroke: 0.2px rgba(255, 107, 157, 0.03);
+            text-shadow: 0 0 8px rgba(255, 107, 157, 0.05);
+        }
+        .footer span {
+            color: #ff8aae;
+            -webkit-text-stroke: 0.3px rgba(255, 107, 157, 0.04);
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.08);
+        }
+
+        .video-wrapper {
+            height: 0;
+            overflow: hidden;
+        }
+        .video-wrapper iframe { display: none; }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .welcome-char {
+                font-size: 42px;
+            }
+            .welcome-wrapper {
+                gap: 4px;
+            }
+            .card {
+                padding: 24px 16px 20px;
+                border-radius: 28px;
+                background: rgba(255, 255, 255, 0.015);
+                backdrop-filter: blur(12px) saturate(1.1);
+                -webkit-backdrop-filter: blur(12px) saturate(1.1);
+            }
+            .card::before { border-radius: 30px; }
+            .card-drops { border-radius: 28px; }
+            .header h1 { font-size: 24px; }
+            .datetime .time { font-size: 22px; }
+            .social a { padding: 10px 14px; font-size: 13px; }
+            .social a .icon { font-size: 16px; width: 28px; }
+            .music-btn { padding: 5px 14px; font-size: 12px; min-width: 70px; }
+            .music-info {
+                flex-direction: column;
+                gap: 3px;
+                align-items: flex-start;
+            }
+            .card-drop {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- WELCOME OVERLAY -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-wrapper" id="welcomeWrapper">
+            <span class="welcome-char" data-char="W">W</span>
+            <span class="welcome-char" data-char="e">e</span>
+            <span class="welcome-char" data-char="l">l</span>
+            <span class="welcome-char" data-char="c">c</span>
+            <span class="welcome-char" data-char="o">o</span>
+            <span class="welcome-char" data-char="m">m</span>
+            <span class="welcome-char" data-char="e">e</span>
+        </div>
+    </div>
+
+    <!-- HIỆU ỨNG CLICK -->
+    <div class="click-effect-container" id="clickEffectContainer"></div>
+
+    <!-- SAKURA NỀN -->
+    <div class="sakura-container" id="sakuraContainer"></div>
+
+    <!-- GIỌT NƯỚC NỀN -->
+    <div class="drop-container" id="dropContainer"></div>
+
+    <!-- CARD -->
+    <div class="card" id="card">
+
+        <div class="card-drops" id="cardDrops"></div>
+
+        <header class="header">
+            <h1>Welcome</h1>
+            <p>Luu Van Huy</p>
+        </header>
+
+        <section class="datetime">
+            <div class="time" id="timeDisplay">00:00:00</div>
+            <div class="date" id="dateDisplay">Thứ Hai, 01/09/2026</div>
+        </section>
+
+        <section class="music-section">
+            <div class="song-title">ANH NHỚ EM - Tuấn Hưng</div>
+            <div class="progress-bar" id="progressBar">
+                <div class="fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-time">
+                <span id="currentTime">0:00</span>
+                <span id="totalTime">0:00</span>
+            </div>
+            <div class="music-controls">
+                <button class="music-btn" id="playBtn">▶ Phát</button>
+                <button class="music-btn" id="pauseBtn">Tạm dừng</button>
+            </div>
+            <div class="music-info">
+                <div class="info-artist">🎵 <span>Nghệ sĩ:</span> Tuấn Hưng</div>
+                <div class="info-album"> <span>Album:</span> Meo Music · 07-06</div>
+            </div>
+        </section>
+
+        <section class="social">
+            <a href="https://www.tiktok.com/@luuvanhuyh?_r=1&_t=ZS-99Mht7uzL3F" target="_blank" rel="noopener noreferrer">
+                <span class="icon"></span>
+                <span class="text">TikTok</span>
+                <span class="arrow">→</span>
+            </a>
+            <a href="https://zalo.me/0865008142" target="_blank" rel="noopener noreferrer">
+                <span class="icon"></span>
+                <span class="text">Zalo</span>
+                <span class="arrow">→</span>
+            </a>
+            <a href="https://www.facebook.com/share/1bbttinVg5/" target="_blank" rel="noopener noreferrer">
+                <span class="icon"></span>
+                <span class="text">Facebook</span>
+                <span class="arrow">→</span>
+            </a>
+            <a href="https://discord.gg/6628g7uT" target="_blank" rel="noopener noreferrer">
+                <span class="icon"></span>
+                <span class="text">Discord</span>
+                <span class="arrow">→</span>
+            </a>
+        </section>
+
+        <footer class="footer">
+            <p>Made with <span>❤</span> by <span>Luu Van Huy</span></p>
+        </footer>
+
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="video-wrapper">
+        <iframe id="youtubePlayer"
+        src="https://www.youtube.com/embed/lyH7bbtBpIA?enablejsapi=1&autoplay=1"
+        allow="autoplay; encrypted-media">
+    </iframe>
+</div>
+
+<script>
+    // ============================================================
+    // WELCOME - TỰ ĐỘNG ẨN SAU 2.8s
+    // ============================================================
+    setTimeout(() => {
+        document.getElementById('welcomeOverlay').classList.add('hidden');
+    }, 2800);
+
+    // ============================================================
+    // HIỆU ỨNG CLICK - SAKURA RƠI + KIM TUYẾN LẤP LÁNH
+    // ============================================================
+    (function() {
+        const container = document.getElementById('clickEffectContainer');
+        const sakuraSymbols = ['🌸', '🌸', '🌸', '💮', '🌸', '🌸'];
+        const sparkleColors = ['#ffffff', '#ffb7c5', '#ff6b9d', '#ffd1dc', '#ff9eb5'];
+
+        function createEffect(x, y) {
+            // 5-8 cánh hoa sakura rơi
+            const count = 5 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'click-sakura';
+                el.textContent = sakuraSymbols[Math.floor(Math.random() * sakuraSymbols.length)];
+                el.style.left = (x + (Math.random() - 0.5) * 120) + 'px';
+                el.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+                el.style.fontSize = (18 + Math.random() * 24) + 'px';
+                el.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+                el.style.animationDelay = (Math.random() * 0.3) + 's';
+                el.style.transform = `rotate(${Math.random() * 360}deg)`;
+                container.appendChild(el);
+
+                // Xóa sau khi animation kết thúc
+                setTimeout(() => {
+                    if (el.parentNode) el.remove();
+                }, 3500);
+            }
+
+            // 10-15 kim tuyến lấp lánh
+            const sparkleCount = 10 + Math.floor(Math.random() * 8);
+            for (let i = 0; i < sparkleCount; i++) {
+                const el = document.createElement('div');
+                el.className = 'click-sparkle';
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = 30 + Math.random() * 70;
+                const sx = Math.cos(angle) * distance;
+                const sy = Math.sin(angle) * distance - 30;
+
+                el.style.left = (x + (Math.random() - 0.5) * 20) + 'px';
+                el.style.top = (y + (Math.random() - 0.5) * 20) + 'px';
+                el.style.setProperty('--sx', sx + 'px');
+                el.style.setProperty('--sy', sy + 'px');
+                el.style.width = (3 + Math.random() * 6) + 'px';
+                el.style.height = (3 + Math.random() * 6) + 'px';
+                el.style.background = `radial-gradient(circle, ${sparkleColors[Math.floor(Math.random() * sparkleColors.length)]}, #ffffff)`;
+                el.style.boxShadow = `0 0 ${10 + Math.random() * 20}px ${sparkleColors[Math.floor(Math.random() * sparkleColors.length)]}`;
+                el.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+                el.style.animationDelay = (Math.random() * 0.2) + 's';
+                container.appendChild(el);
+
+                setTimeout(() => {
+                    if (el.parentNode) el.remove();
+                }, 2000);
+            }
+        }
+
+        // Lắng nghe click trên toàn bộ card (trừ các nút bấm)
+        const card = document.getElementById('card');
+        card.addEventListener('click', function(e) {
+            // Không tạo hiệu ứng nếu click vào nút play/pause hoặc link
+            const target = e.target;
+            if (target.closest('.music-btn') || target.closest('a')) {
+                return;
+            }
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            createEffect(x, y);
+        });
+
+        // Touch cho mobile
+        card.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            if (!touch) return;
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && (target.closest('.music-btn') || target.closest('a'))) {
+                return;
+            }
+            const rect = card.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            createEffect(x, y);
+        }, { passive: true });
+
+        // Cho phép click trên toàn bộ màn hình nếu click vào card
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            if (target.closest('.card')) return;
+            // Nếu click ngoài card nhưng trong vùng card (do padding) thì vẫn tạo
+            const cardEl = document.getElementById('card');
+            const rect = cardEl.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                if (target.closest('.music-btn') || target.closest('a')) return;
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                createEffect(x, y);
+            }
+        });
+    })();
+
+    // ============================================================
+    // SAKURA NỀN
+    // ============================================================
+    (function() {
+        const c = document.getElementById('sakuraContainer');
+        const p = ['🌸', '🌸', '🌸', '💮', '🌸', '🌸'];
+        for (let i = 0; i < 35; i++) {
+            const e = document.createElement('div');
+            e.className = 'sakura';
+            e.textContent = p[Math.floor(Math.random() * p.length)];
+            e.style.left = Math.random() * 100 + '%';
+            e.style.fontSize = (14 + Math.random() * 22) + 'px';
+            e.style.animationDuration = (8 + Math.random() * 16) + 's';
+            e.style.animationDelay = (Math.random() * 15) + 's';
+            e.style.opacity = 0.3 + Math.random() * 0.6;
+            c.appendChild(e);
+        }
+    })();
+
+    // ============================================================
+    // GIỌT NƯỚC NỀN
+    // ============================================================
+    (function() {
+        const container = document.getElementById('dropContainer');
+        for (let i = 0; i < 40; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'drop';
+            const x = Math.random() * 100;
+            const delay = Math.random() * 18;
+            const duration = 10 + Math.random() * 18;
+            const size = 3 + Math.random() * 7;
+            const drift = (Math.random() - 0.5) * 50;
+            drop.style.left = x + '%';
+            drop.style.width = size + 'px';
+            drop.style.height = (size * 2.8) + 'px';
+            drop.style.animationDuration = duration + 's';
+            drop.style.animationDelay = delay + 's';
+            drop.style.setProperty('--drift', drift + 'px');
+            drop.style.opacity = 0.08 + Math.random() * 0.2;
+            drop.style.background = `rgba(255, 255, 255, ${0.02 + Math.random() * 0.05})`;
+            container.appendChild(drop);
+        }
+    })();
+
+    // ============================================================
+    // GIỌT NƯỚC BÁM TRÊN MENU
+    // ============================================================
+    (function() {
+        const container = document.getElementById('cardDrops');
+        const positions = [
+            { top: '3%', left: '4%', size: 14 },
+            { top: '6%', right: '6%', size: 10 },
+            { top: '15%', left: '16%', size: 8 },
+            { top: '24%', right: '14%', size: 12 },
+            { top: '36%', left: '3%', size: 9 },
+            { top: '42%', right: '4%', size: 11 },
+            { top: '53%', left: '12%', size: 7 },
+            { top: '60%', right: '9%', size: 10 },
+            { top: '73%', left: '6%', size: 8 },
+            { top: '80%', right: '6%', size: 6 },
+            { top: '10%', left: '40%', size: 6 },
+            { top: '28%', left: '50%', size: 5 },
+            { top: '48%', left: '58%', size: 7 },
+            { top: '66%', left: '46%', size: 5 },
+            { top: '86%', left: '36%', size: 6 },
+            { top: '18%', left: '70%', size: 4 },
+            { top: '44%', left: '76%', size: 5 },
+            { top: '70%', left: '68%', size: 4 },
+        ];
+
+        positions.forEach((pos) => {
+            const drop = document.createElement('div');
+            drop.className = 'card-drop';
+            const size = pos.size || 8;
+            drop.style.width = size + 'px';
+            drop.style.height = (size * 2.6) + 'px';
+            drop.style.top = pos.top;
+            if (pos.left) drop.style.left = pos.left;
+            if (pos.right) drop.style.right = pos.right;
+            drop.style.animationDuration = (3.5 + Math.random() * 3.5) + 's';
+            drop.style.animationDelay = (Math.random() * 3) + 's';
+            drop.style.opacity = 0.10 + Math.random() * 0.2;
+            drop.style.background = `rgba(255, 255, 255, ${0.03 + Math.random() * 0.06})`;
+            container.appendChild(drop);
+        });
+    })();
+
+    // ============================================================
+    // CLOCK
+    // ============================================================
+    (function() {
+        const timeEl = document.getElementById('timeDisplay');
+        const dateEl = document.getElementById('dateDisplay');
+        const DAYS = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+        function update() {
+            const n = new Date();
+            timeEl.textContent = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+            dateEl.textContent = `${DAYS[n.getDay()]}, ${String(n.getDate()).padStart(2,'0')}/${String(n.getMonth()+1).padStart(2,'0')}/${n.getFullYear()}`;
+        }
+        update();
+        setInterval(update, 1000);
+    })();
+
+    // ============================================================
+    // GYROSCOPE
+    // ============================================================
+    (function() {
+        const card = document.getElementById('card');
+        let targetRotateY = 0;
+        let isGyroActive = false;
+
+        function updateCard() {
+            if (!card) return;
+            const rotY = Math.max(-10, Math.min(10, targetRotateY));
+            const rotX = Math.max(-3, Math.min(3, targetRotateY * 0.25));
+            card.style.transform = `perspective(1200px) rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+        }
+
+        if (window.DeviceOrientationEvent) {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission().then(state => {
+                    if (state === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                        isGyroActive = true;
+                    }
+                }).catch(() => {});
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation);
+                isGyroActive = true;
+            }
+        }
+
+        function handleOrientation(event) {
+            const gamma = event.gamma || 0;
+            targetRotateY = Math.max(-10, Math.min(10, (gamma / 45) * 10));
+            updateCard();
+        }
+
+        let isDragging = false;
+        let startX = 0;
+        let dragRotate = 0;
+
+        if (!isGyroActive) {
+            card.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                dragRotate = targetRotateY;
+                card.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const diff = (e.clientX - startX) / 12;
+                targetRotateY = Math.max(-10, Math.min(10, dragRotate + diff));
+                updateCard();
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                card.style.cursor = 'default';
+            });
+
+            let touchStartX = 0;
+            let touchRotate = 0;
+            card.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                if (touch) {
+                    touchStartX = touch.clientX;
+                    touchRotate = targetRotateY;
+                }
+            }, { passive: true });
+
+            card.addEventListener('touchmove', (e) => {
+                const touch = e.touches[0];
+                if (!touch) return;
+                const diff = (touch.clientX - touchStartX) / 12;
+                targetRotateY = Math.max(-10, Math.min(10, touchRotate + diff));
+                updateCard();
+            }, { passive: true });
+
+            let autoTimer = null;
+            let autoPos = 0;
+            let autoDir = 1;
+            setTimeout(() => {
+                autoTimer = setInterval(() => {
+                    if (isDragging) return;
+                    autoPos += autoDir * 0.12;
+                    if (autoPos > 3 || autoPos < -3) autoDir *= -1;
+                    targetRotateY = autoPos;
+                    updateCard();
+                }, 50);
+            }, 3000);
+        }
+    })();
+
+    // ============================================================
+    // YOUTUBE PLAYER
+    // ============================================================
+    (function() {
+        let player = null, isReady = false, attempts = 0;
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+        const progressBar = document.getElementById('progressBar');
+
+        function fmt(s) { if (!s || s < 0) return '0:00'; const m = Math.floor(s/60), sec = Math.floor(s%60); return `${m}:${sec<10?'0':''}${sec}`; }
+        function updateProgress() { if (!player || !player.getCurrentTime) return; const c = player.getCurrentTime(), d = player.getDuration(); if (d > 0) { progressFill.style.width = (c/d*100)+'%'; currentTimeEl.textContent = fmt(c); totalTimeEl.textContent = fmt(d); } }
+
+        window.onYouTubeIframeAPIReady = function() {
+            player = new YT.Player('youtubePlayer', {
+                events: {
+                    onReady: function(e) { isReady = true; totalTimeEl.textContent = fmt(player.getDuration()); setInterval(updateProgress, 500); player.playVideo(); },
+                    onStateChange: function(e) { const s = e.data; if (s === YT.PlayerState.PLAYING) playBtn.textContent = '▶ Tiếp tục'; else if (s === YT.PlayerState.PAUSED) playBtn.textContent = '▶ Phát'; else if (s === YT.PlayerState.ENDED) playBtn.textContent = '▶ Phát lại'; },
+                    onError: function() { if (attempts < 5) { attempts++; setTimeout(() => { if (player && isReady) player.playVideo(); }, 2000); } }
+                }
+            });
+        };
+
+        progressBar.addEventListener('click', function(e) { if (!player || !player.getDuration) return; const rect = this.getBoundingClientRect(); const x = (e.clientX - rect.left) / rect.width; player.seekTo(x * player.getDuration(), true); });
+        playBtn.addEventListener('click', function() { if (!isReady) { alert('Đang tải...'); return; } const s = player.getPlayerState(); if (s === YT.PlayerState.PAUSED || s === YT.PlayerState.ENDED || s === -1) player.playVideo(); else if (s !== YT.PlayerState.PLAYING) player.playVideo(); });
+        pauseBtn.addEventListener('click', function() { if (!isReady) { alert('Đang tải...'); return; } if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo(); });
+
+        const script = document.createElement('script');
+        script.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(script);
+        setTimeout(() => { if (isReady) try { player.playVideo(); } catch(_) {} }, 3000);
+    })();
+</script>
+
+</body>
+  </html>
