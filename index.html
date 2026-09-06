@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Van Nam Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #050a12;
+            color: #e0f0fa;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* === SAO BĂNG === */
+        .starfield {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #7ec8e3;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite alternate;
+        }
+        @keyframes twinkle {
+            0% {
+                opacity: 0.2;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(126, 200, 227, 0.8), transparent);
+            border-radius: 99px;
+            animation: shoot var(--speed) linear infinite;
+            opacity: 0;
+        }
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0) rotate(-35deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-800px) translateY(400px) rotate(-35deg);
+                opacity: 0;
+            }
+        }
+
+        /* === CONTAINER === */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        /* === LOGIN SCREEN === */
+        #loginScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        #loginScreen .avatar-login {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid rgba(126, 200, 227, 0.3);
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 0 40px rgba(126, 200, 227, 0.1);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(126, 200, 227, 0.05);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(126, 200, 227, 0.15);
+            }
+        }
+        #loginScreen .avatar-login img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #loginScreen .store-name {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7ec8e3, #a8d8f0, #7ec8e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px rgba(126, 200, 227, 0.1);
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        #loginScreen .store-sub {
+            color: #6a8aaa;
+            font-size: 14px;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 380px;
+            background: rgba(10, 20, 35, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(126, 200, 227, 0.08);
+            padding: 24px 20px;
+            box-shadow: 0 0 40px rgba(126, 200, 227, 0.02), inset 0 0 40px rgba(126, 200, 227, 0.01);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .login-box:hover {
+            border-color: rgba(126, 200, 227, 0.15);
+            box-shadow: 0 0 60px rgba(126, 200, 227, 0.03), inset 0 0 60px rgba(126, 200, 227, 0.02);
+        }
+
+        .login-box .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            background: rgba(5, 10, 18, 0.4);
+            border-radius: 14px;
+            padding: 4px;
+        }
+
+        .login-box .tab-buttons button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: #6a8aaa;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-box .tab-buttons button.active {
+            background: rgba(126, 200, 227, 0.08);
+            color: #7ec8e3;
+            box-shadow: 0 0 20px rgba(126, 200, 227, 0.02);
+        }
+
+        .login-box .tab-buttons button:hover {
+            color: #a8d8f0;
+        }
+
+        .login-box .form-group {
+            margin-bottom: 12px;
+        }
+
+        .login-box .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #8ab4d0;
+            margin-bottom: 4px;
+        }
+
+        .login-box .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            background: rgba(5, 10, 18, 0.4);
+            color: #e0f0fa;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .login-box .form-group input:focus {
+            border-color: rgba(126, 200, 227, 0.15);
+        }
+
+        .login-box .form-group input::placeholder {
+            color: #4a5a6a;
+        }
+
+        .login-box .login-btn-main {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(126, 200, 227, 0.1), rgba(126, 200, 227, 0.04));
+            color: #7ec8e3;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            margin-top: 4px;
+        }
+
+        .login-box .login-btn-main:hover {
+            background: linear-gradient(135deg, rgba(126, 200, 227, 0.15), rgba(126, 200, 227, 0.06));
+            border-color: rgba(126, 200, 227, 0.12);
+            box-shadow: 0 0 30px rgba(126, 200, 227, 0.03);
+        }
+
+        .login-box .social-login {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .login-box .social-login button {
+            flex: 1;
+            padding: 8px;
+            border-radius: 14px;
+            border: 1px solid rgba(126, 200, 227, 0.04);
+            background: rgba(5, 10, 18, 0.4);
+            color: #8ab4d0;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-box .social-login button:hover {
+            background: rgba(126, 200, 227, 0.04);
+            border-color: rgba(126, 200, 227, 0.08);
+        }
+
+        .login-box .social-login .google {
+            color: #ea4335;
+        }
+        .login-box .social-login .discord {
+            color: #5865f2;
+        }
+
+        .login-box .form-error {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 18px;
+        }
+
+        .login-box .form-success {
+            color: #34d399;
+            font-size: 12px;
+            margin-top: 4px;
+            min-height: 18px;
+        }
+
+        /* ============================================================
+           MAIN APP
+           ============================================================ */
+        #appScreen {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* HEADER */
+        .app-header {
+            background: rgba(10, 20, 35, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(126, 200, 227, 0.06);
+            border-radius: 0 0 20px 20px;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .app-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-header .header-left .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+        }
+
+        .app-header .header-left .hamburger:hover {
+            background: rgba(126, 200, 227, 0.05);
+        }
+
+        .app-header .header-left .hamburger span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: #7ec8e3;
+            border-radius: 99px;
+            transition: all 0.3s ease;
+        }
+
+        .app-header .header-left .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 4px);
+        }
+        .app-header .header-left .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .app-header .header-left .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -4px);
+        }
+
+        .app-header .brand {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7ec8e3, #a8d8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-header .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-header .header-right .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-header .header-right .user-info .avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7ec8e3, #4a8aaa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: #050a12;
+        }
+
+        .app-header .header-right .user-info .user-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #a8d8f0;
+        }
+
+        .app-header .header-right .settings-gear {
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .app-header .header-right .settings-gear:hover {
+            border-color: rgba(126, 200, 227, 0.15);
+            background: rgba(126, 200, 227, 0.03);
+        }
+
+        .app-header .header-right .settings-gear i {
+            font-size: 16px;
+            color: #7ec8e3;
+            transition: transform 0.6s ease;
+        }
+
+        .app-header .header-right .settings-gear:hover i {
+            transform: rotate(180deg);
+        }
+
+        .app-header .header-right .settings-gear.spinning i {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* SIDEBAR */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 260px;
+            height: 100vh;
+            background: rgba(10, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(126, 200, 227, 0.06);
+            padding: 16px 12px;
+            overflow-y: auto;
+            z-index: 90;
+            transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 4px 0 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar .sidebar-header {
+            padding: 0 10px 16px;
+            border-bottom: 1px solid rgba(126, 200, 227, 0.06);
+            margin-bottom: 12px;
+        }
+
+        .sidebar .sidebar-header .shop-name {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7ec8e3, #a8d8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar .sidebar-header .shop-sub {
+            font-size: 11px;
+            color: #6a8aaa;
+        }
+
+        .sidebar .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #8ab4d0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            margin: 2px 0;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(126, 200, 227, 0.04);
+            color: #a8d8f0;
+        }
+
+        .sidebar .nav-item.active {
+            background: rgba(126, 200, 227, 0.06);
+            color: #7ec8e3;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+        }
+
+        .sidebar .nav-item .icon {
+            font-size: 15px;
+            width: 22px;
+            text-align: center;
+        }
+
+        .sidebar .nav-item .badge {
+            margin-left: auto;
+            font-size: 10px;
+            background: rgba(126, 200, 227, 0.08);
+            padding: 0 8px;
+            border-radius: 99px;
+            color: #7ec8e3;
+        }
+
+        .sidebar .nav-divider {
+            height: 1px;
+            background: rgba(126, 200, 227, 0.04);
+            margin: 8px 10px;
+        }
+
+        /* === MAIN PAGES === */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            padding: 12px 0;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #7ec8e3;
+            margin-bottom: 2px;
+        }
+
+        .page-sub {
+            color: #6a8aaa;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        /* PRODUCT GRID */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .product-card {
+            background: rgba(10, 20, 35, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            border-radius: 18px;
+            padding: 14px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: rgba(126, 200, 227, 0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card .product-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #e0f0fa;
+            margin-bottom: 2px;
+        }
+
+        .product-card .product-desc {
+            font-size: 11px;
+            color: #6a8aaa;
+            margin-bottom: 8px;
+        }
+
+        .product-card .prices {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .product-card .prices .price-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #a8d8f0;
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(126, 200, 227, 0.02);
+        }
+
+        .product-card .prices .price-item .label {
+            color: #6a8aaa;
+        }
+
+        .product-card .prices .price-item .value {
+            color: #7ec8e3;
+            font-weight: 600;
+        }
+
+        .product-card .buy-btn {
+            width: 100%;
+            margin-top: 8px;
+            padding: 7px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, rgba(126, 200, 227, 0.1), rgba(126, 200, 227, 0.04));
+            color: #7ec8e3;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+        }
+
+        .product-card .buy-btn:hover {
+            background: linear-gradient(135deg, rgba(126, 200, 227, 0.15), rgba(126, 200, 227, 0.06));
+            border-color: rgba(126, 200, 227, 0.12);
+        }
+
+        .product-card .buy-btn:active {
+            transform: scale(0.97);
+        }
+
+        .product-card .tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 99px;
+            background: rgba(126, 200, 227, 0.08);
+            color: #7ec8e3;
+            border: 1px solid rgba(126, 200, 227, 0.04);
+        }
+
+        /* BANK SECTION */
+        .bank-section {
+            background: rgba(10, 20, 35, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .bank-section .bank-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #e0f0fa;
+            margin-bottom: 2px;
+        }
+
+        .bank-section .bank-sub {
+            font-size: 12px;
+            color: #6a8aaa;
+            margin-bottom: 12px;
+        }
+
+        .bank-section .bank-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .bank-section .bank-info .info-item {
+            background: rgba(5, 10, 18, 0.4);
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(126, 200, 227, 0.04);
+        }
+
+        .bank-section .bank-info .info-item .label {
+            font-size: 10px;
+            color: #5a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .bank-section .bank-info .info-item .value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #a8d8f0;
+            margin-top: 2px;
+            word-break: break-all;
+        }
+
+        .bank-section .qr-container {
+            text-align: center;
+            padding: 14px;
+            background: rgba(5, 10, 18, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(126, 200, 227, 0.04);
+        }
+
+        .bank-section .qr-container .qr-placeholder {
+            font-size: 60px;
+            color: #7ec8e3;
+            opacity: 0.15;
+        }
+
+        .bank-section .qr-container .qr-text {
+            font-size: 12px;
+            color: #6a8aaa;
+            margin-top: 6px;
+        }
+
+        .bank-section .qr-container .qr-btn {
+            padding: 5px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(126, 200, 227, 0.15);
+            background: rgba(126, 200, 227, 0.03);
+            color: #7ec8e3;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 6px;
+        }
+
+        .bank-section .qr-container .qr-btn:hover {
+            background: rgba(126, 200, 227, 0.06);
+            border-color: rgba(126, 200, 227, 0.2);
+        }
+
+        /* BONG BONG CHAT */
+        .chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 60;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5865f2, #7ec8e3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 30px rgba(88, 101, 242, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            animation: floatBubble 3s ease-in-out infinite;
+        }
+
+        .chat-bubble:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 50px rgba(88, 101, 242, 0.4);
+        }
+
+        .chat-bubble i {
+            font-size: 24px;
+            color: #fff;
+        }
+
+        @keyframes floatBubble {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .chat-bubble .tooltip {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 20, 35, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #a8d8f0;
+            white-space: nowrap;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-bubble:hover .tooltip {
+            opacity: 1;
+            bottom: 68px;
+        }
+
+        /* MODAL KEY */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            max-width: 380px;
+            width: 100%;
+            background: rgba(10, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            border-radius: 20px;
+            padding: 20px;
+            animation: modalIn 0.3s ease;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes modalIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e0f0fa;
+            margin-bottom: 2px;
+        }
+
+        .modal .modal-sub {
+            font-size: 13px;
+            color: #6a8aaa;
+            margin-bottom: 14px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 10px;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #8ab4d0;
+            margin-bottom: 3px;
+        }
+
+        .modal .form-group input,
+        .modal .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            background: rgba(5, 10, 18, 0.4);
+            color: #e0f0fa;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
+            border-color: rgba(126, 200, 227, 0.15);
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .modal .modal-actions button {
+            flex: 1;
+            padding: 8px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal .modal-actions .btn-cancel {
+            background: rgba(255, 255, 255, 0.03);
+            color: #8ab4d0;
+            border: 1px solid rgba(126, 200, 227, 0.04);
+        }
+
+        .modal .modal-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .modal .modal-actions .btn-confirm {
+            background: linear-gradient(135deg, rgba(126, 200, 227, 0.1), rgba(126, 200, 227, 0.04));
+            color: #7ec8e3;
+            border: 1px solid rgba(126, 200, 227, 0.06);
+        }
+
+        .modal .modal-actions .btn-confirm:hover {
+            background: linear-gradient(135deg, rgba(126, 200, 227, 0.15), rgba(126, 200, 227, 0.06));
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(10, 20, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(126, 200, 227, 0.06);
+            padding: 10px 20px;
+            border-radius: 14px;
+            color: #e0f0fa;
+            font-size: 13px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .container {
+                padding: 8px;
+            }
+            #loginScreen .store-name {
+                font-size: 26px;
+            }
+            .product-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .bank-section .bank-info {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                width: 230px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            #loginScreen .store-name {
+                font-size: 22px;
+            }
+            .app-header .brand {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SAO BANG ===== -->
+    <div class="starfield" id="starfield"></div>
+
+    <!-- ===== CONTAINER ===== -->
+    <div class="container" id="appContainer">
+
+        <!-- ===== LOGIN SCREEN ===== -->
+        <div id="loginScreen">
+            <div class="avatar-login">
+                <img src="https://i.ibb.co/8nVxfsfC/6b0495fe4a7633217331c8c46bd193fd.png" alt="Van Nam Store">
+            </div>
+            <div class="store-name">Van Nam Store</div>
+            <div class="store-sub">Hack FF & Tools</div>
+
+            <div class="login-box">
+                <div class="tab-buttons">
+                    <button class="active" id="tabLogin">Dang nhap</button>
+                    <button id="tabRegister">Tao tai khoan</button>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>Ten dang nhap</label>
+                        <input type="text" id="loginUsername" placeholder="Nhap ten...">
+                    </div>
+                    <div class="form-group">
+                        <label>Mat khau</label>
+                        <input type="password" id="loginPassword" placeholder="Nhap mat khau...">
+                    </div>
+                    <div class="form-error" id="loginError"></div>
+                    <button class="login-btn-main" id="loginBtnMain">Dang nhap</button>
+                </div>
+
+                <!-- Register Form -->
+                <div id="registerForm" style="display:none;">
+                    <div class="form-group">
+                        <label>Ten dang nhap</label>
+                        <input type="text" id="regUsername" placeholder="Chon ten...">
+                    </div>
+                    <div class="form-group">
+                        <label>Mat khau</label>
+                        <input type="password" id="regPassword" placeholder="Nhap mat khau...">
+                    </div>
+                    <div class="form-group">
+                        <label>Xac nhan mat khau</label>
+                        <input type="password" id="regConfirm" placeholder="Nhap lai mat khau...">
+                    </div>
+                    <div class="form-error" id="regError"></div>
+                    <div class="form-success" id="regSuccess"></div>
+                    <button class="login-btn-main" id="registerBtnMain">Tao tai khoan</button>
+                </div>
+
+                <div class="social-login">
+                    <button class="google" id="loginGoogle"><i class="fab fa-google"></i> Google</button>
+                    <button class="discord" id="loginDiscord"><i class="fab fa-discord"></i> Discord</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== APP SCREEN ===== -->
+        <div id="appScreen">
+
+            <!-- HEADER -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button class="hamburger" id="hamburgerBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div class="brand">Van Nam Store</div>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span class="user-name" id="appUserName">User</span>
+                        <div class="avatar-small" id="appUserAvatar">U</div>
+                    </div>
+                    <div class="settings-gear" id="settingsGear">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- SIDEBAR -->
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <nav class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="shop-name">Van Nam Store</div>
+                    <div class="shop-sub">Hack FF & Tools</div>
+                </div>
+                <div class="nav-item active" data-page="page-home">
+                    <span class="icon"><i class="fas fa-home"></i></span> Trang chu
+                </div>
+                <div class="nav-item" data-page="page-napvip">
+                    <span class="icon"><i class="fas fa-coins"></i></span> Nap VIP 24/7 <span class="badge">Hot</span>
+                </div>
+                <div class="nav-item" data-page="page-bank">
+                    <span class="icon"><i class="fas fa-university"></i></span> Bank <span class="badge">QR</span>
+                </div>
+                <div class="nav-item" data-page="page-profile">
+                    <span class="icon"><i class="fas fa-user"></i></span> Thong tin
+                </div>
+                <div class="nav-divider"></div>
+                <div class="nav-item" id="logoutBtn" style="color:#ff6b6b;">
+                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span> Dang xuat
+                </div>
+            </nav>
+
+            <!-- ===== PAGES ===== -->
+
+            <!-- HOME -->
+            <div class="page active" id="page-home">
+                <div class="page-title">Trang chu</div>
+                <div class="page-sub">Chao mung den Van Nam Store</div>
+
+                <div class="product-grid">
+                    <div class="product-card">
+                        <span class="tag">Hot</span>
+                        <div class="product-name">Aimkill Safe</div>
+                        <div class="product-desc">Aimkill an toan, khong bi ban</div>
+                        <div class="prices">
+                            <div class="price-item"><span class="label">3 Days</span><span class="value">20.000d</span></div>
+                            <div class="price-item"><span class="label">7 Days</span><span class="value">35.000d</span></div>
+                            <div class="price-item"><span class="label">30 Days</span><span class="value">60.000d</span></div>
+                        </div>
+                        <button class="buy-btn" data-product="Aimkill Safe">Mua key</button>
+                    </div>
+
+                    <div class="product-card">
+                        <span class="tag">Pro</span>
+                        <div class="product-name">Migul</div>
+                        <div class="product-desc">Tool ho tro game mạnh mẽ</div>
+                        <div class="prices">
+                            <div class="price-item"><span class="label">3 Days</span><span class="value">20.000d</span></div>
+                            <div class="price-item"><span class="label">7 Days</span><span class="value">35.000d</span></div>
+                            <div class="price-item"><span class="label">30 Days</span><span class="value">60.000d</span></div>
+                        </div>
+                        <button class="buy-btn" data-product="Migul">Mua key</button>
+                    </div>
+
+                    <div class="product-card">
+                        <span class="tag">VIP</span>
+                        <div class="product-name">Migul Pro</div>
+                        <div class="product-desc">Phien ban cao cap nhat</div>
+                        <div class="prices">
+                            <div class="price-item"><span class="label">3 Days</span><span class="value">30.000d</span></div>
+                            <div class="price-item"><span class="label">7 Days</span><span class="value">50.000d</span></div>
+                            <div class="price-item"><span class="label">30 Days</span><span class="value">80.000d</span></div>
+                        </div>
+                        <button class="buy-btn" data-product="Migul Pro">Mua key</button>
+                    </div>
+
+                    <div class="product-card">
+                        <span class="tag">Sale</span>
+                        <div class="product-name">Pro Ipa</div>
+                        <div class="product-desc">Proxy IPA rieng biet</div>
+                        <div class="prices">
+                            <div class="price-item"><span class="label">3 Days</span><span class="value">15.000d</span></div>
+                            <div class="price-item"><span class="label">7 Days</span><span class="value">25.000d</span></div>
+                            <div class="price-item"><span class="label">30 Days</span><span class="value">45.000d</span></div>
+                        </div>
+                        <button class="buy-btn" data-product="Pro Ipa">Mua key</button>
+                    </div>
+
+                    <div class="product-card">
+                        <span class="tag">New</span>
+                        <div class="product-name">Mod Skin Ios</div>
+                        <div class="product-desc">Skin dep, hieu ung doc dao</div>
+                        <div class="prices">
+                            <div class="price-item"><span class="label">3 Days</span><span class="value">20.000d</span></div>
+                            <div class="price-item"><span class="label">7 Days</span><span class="value">35.000d</span></div>
+                            <div class="price-item"><span class="label">30 Days</span><span class="value">60.000d</span></div>
+                        </div>
+                        <button class="buy-btn" data-product="Mod Skin Ios">Mua key</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NAP VIP -->
+            <div class="page" id="page-napvip">
+                <div class="page-title">Nap VIP 24/7</div>
+                <div class="page-sub">Thong tin nap tien</div>
+
+                <div class="bank-section">
+                    <div class="bank-title">Thong tin nguoi nhan</div>
+                    <div class="bank-sub">Chuyen khoan den tai khoan ben duoi</div>
+                    <div class="bank-info">
+                        <div class="info-item">
+                            <div class="label">Ten nguoi nhan</div>
+                            <div class="value">Luu Van Huy</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Ngan hang</div>
+                            <div class="value">MB Bank</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">So tai khoan</div>
+                            <div class="value">0876008142</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Noi dung</div>
+                            <div class="value">Nap VIP + Ten</div>
+                        </div>
+                    </div>
+                    <div class="qr-container">
+                        <div class="qr-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="qr-text">Quet QR de chuyen khoan nhanh</div>
+                        <button class="qr-btn" id="qrBtn">Tao QR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BANK -->
+            <div class="page" id="page-bank">
+                <div class="page-title">Bank</div>
+                <div class="page-sub">Thong tin thanh toan</div>
+
+                <div class="bank-section">
+                    <div class="bank-title">Tai khoan ngan hang</div>
+                    <div class="bank-sub">Chuyen khoan den</div>
+                    <div class="bank-info">
+                        <div class="info-item">
+                            <div class="label">Ten ngan hang</div>
+                            <div class="value">MB Bank</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">So tai khoan</div>
+                            <div class="value">0876008142</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Ten chu tai khoan</div>
+                            <div class="value">Luu Van Huy</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Noi dung chuyen</div>
+                            <div class="value">Nap VIP + Ten</div>
+                        </div>
+                    </div>
+                    <div class="qr-container">
+                        <div class="qr-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="qr-text">Quet QR de chuyen khoan nhanh</div>
+                        <button class="qr-btn" id="qrBtn2">Tao QR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILE -->
+            <div class="page" id="page-profile">
+                <div class="page-title">Thong tin tai khoan</div>
+                <div class="page-sub">Thong tin ca nhan</div>
+
+                <div class="bank-section">
+                    <div class="bank-info" style="grid-template-columns:1fr;">
+                        <div class="info-item">
+                            <div class="label">Ten dang nhap</div>
+                            <div class="value" id="profileName">User</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">ID</div>
+                            <div class="value" id="profileId">#000000</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Tong tien da nap</div>
+                            <div class="value" style="color:#7ec8e3;" id="profileTotal">0.000d</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Trang thai</div>
+                            <div class="value" style="color:#34d399;">Da dang nhap</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== CHAT BUBBLE ===== -->
+        <div class="chat-bubble" id="chatBubble">
+            <i class="fab fa-discord"></i>
+            <div class="tooltip">Support Discord</div>
+        </div>
+
+        <!-- ===== TOAST ===== -->
+        <div class="toast" id="toast"></div>
+
+        <!-- ===== BUY KEY MODAL ===== -->
+        <div class="modal-overlay" id="buyModal">
+            <div class="modal">
+                <div class="modal-title">Mua key</div>
+                <div class="modal-sub" id="buyProductName">San pham</div>
+                <div class="form-group">
+                    <label>Chon goi</label>
+                    <select id="buyPackage">
+                        <option value="3days">3 Days</option>
+                        <option value="7days">7 Days</option>
+                        <option value="30days">30 Days</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>So luong</label>
+                    <input type="number" id="buyQuantity" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Email nhan key</label>
+                    <input type="email" id="buyEmail" placeholder="Nhap email...">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" id="buyCancel">Huy</button>
+                    <button class="btn-confirm" id="buyConfirm">Xac nhan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SETTINGS PANEL ===== -->
+        <div class="modal-overlay" id="settingsModal">
+            <div class="modal">
+                <div class="modal-title">Cai dat</div>
+                <div class="modal-sub">Thong tin tai khoan</div>
+                <div class="bank-info" style="grid-template-columns:1fr;margin-bottom:12px;">
+                    <div class="info-item">
+                        <div class="label">Ten dang nhap</div>
+                        <div class="value" id="settingsName">User</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">ID</div>
+                        <div class="value" id="settingsId">#000000</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Tong tien da nap</div>
+                        <div class="value" style="color:#7ec8e3;" id="settingsTotal">0.000d</div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" id="settingsClose">Dong</button>
+                    <button class="btn-confirm" id="settingsLogout" style="color:#ff6b6b;">Dang xuat</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        //  VAN NAM STORE - FULL JAVASCRIPT
+        // ============================================================
+
+        (function() {
+            'use strict';
+
+            // ============================================================
+            //  STARFIELD + SHOOTING STARS
+            // ============================================================
+            var starfield = document.getElementById('starfield');
+            for (var i = 0; i < 80; i++) {
+                var star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (2 + Math.random() * 3) + 's');
+                star.style.width = (1 + Math.random() * 2) + 'px';
+                star.style.height = star.style.width;
+                starfield.appendChild(star);
+            }
+
+            for (var i = 0; i < 3; i++) {
+                var shooting = document.createElement('div');
+                shooting.className = 'shooting-star';
+                shooting.style.top = (10 + Math.random() * 60) + '%';
+                shooting.style.left = (80 + Math.random() * 20) + '%';
+                shooting.style.setProperty('--speed', (8 + Math.random() * 10) + 's');
+                shooting.style.animationDelay = (i * 5 + Math.random() * 3) + 's';
+                starfield.appendChild(shooting);
+            }
+
+            // ============================================================
+            //  STATE
+            // ============================================================
+            var isLoggedIn = false;
+            var currentUser = '';
+            var userId = '';
+            var totalMoney = 0;
+            var users = JSON.parse(localStorage.getItem('van_nam_users')) || {};
+            var products = {
+                'Aimkill Safe': { '3days': 20000, '7days': 35000, '30days': 60000 },
+                'Migul': { '3days': 20000, '7days': 35000, '30days': 60000 },
+                'Migul Pro': { '3days': 30000, '7days': 50000, '30days': 80000 },
+                'Pro Ipa': { '3days': 15000, '7days': 25000, '30days': 45000 },
+                'Mod Skin Ios': { '3days': 20000, '7days': 35000, '30days': 60000 }
+            };
+
+            // ============================================================
+            //  DOM REFS
+            // ============================================================
+            var loginScreen = document.getElementById('loginScreen');
+            var appScreen = document.getElementById('appScreen');
+            var loginForm = document.getElementById('loginForm');
+            var registerForm = document.getElementById('registerForm');
+            var tabLogin = document.getElementById('tabLogin');
+            var tabRegister = document.getElementById('tabRegister');
+            var loginUsername = document.getElementById('loginUsername');
+            var loginPassword = document.getElementById('loginPassword');
+            var loginError = document.getElementById('loginError');
+            var loginBtnMain = document.getElementById('loginBtnMain');
+            var regUsername = document.getElementById('regUsername');
+            var regPassword = document.getElementById('regPassword');
+            var regConfirm = document.getElementById('regConfirm');
+            var regError = document.getElementById('regError');
+            var regSuccess = document.getElementById('regSuccess');
+            var registerBtnMain = document.getElementById('registerBtnMain');
+            var loginGoogle = document.getElementById('loginGoogle');
+            var loginDiscord = document.getElementById('loginDiscord');
+
+            var appUserName = document.getElementById('appUserName');
+            var appUserAvatar = document.getElementById('appUserAvatar');
+
+            var sidebar = document.getElementById('sidebar');
+            var overlay = document.getElementById('sidebarOverlay');
+            var hamburger = document.getElementById('hamburgerBtn');
+            var settingsGear = document.getElementById('settingsGear');
+            var settingsModal = document.getElementById('settingsModal');
+            var settingsName = document.getElementById('settingsName');
+            var settingsId = document.getElementById('settingsId');
+            var settingsTotal = document.getElementById('settingsTotal');
+            var settingsClose = document.getElementById('settingsClose');
+            var settingsLogout = document.getElementById('settingsLogout');
+            var logoutBtn = document.getElementById('logoutBtn');
+
+            var profileName = document.getElementById('profileName');
+            var profileId = document.getElementById('profileId');
+            var profileTotal = document.getElementById('profileTotal');
+
+            var buyModal = document.getElementById('buyModal');
+            var buyProductName = document.getElementById('buyProductName');
+            var buyPackage = document.getElementById('buyPackage');
+            var buyQuantity = document.getElementById('buyQuantity');
+            var buyEmail = document.getElementById('buyEmail');
+            var buyCancel = document.getElementById('buyCancel');
+            var buyConfirm = document.getElementById('buyConfirm');
+
+            var toastEl = document.getElementById('toast');
+            var toastTimeout = null;
+
+            var chatBubble = document.getElementById('chatBubble');
+
+            // ============================================================
+            //  FUNCTIONS
+            // ============================================================
+
+            function generateId() {
+                return '#' + String(Math.floor(100000 + Math.random() * 900000));
+            }
+
+            function showToast(msg, type) {
+                if (toastTimeout) clearTimeout(toastTimeout);
+                toastEl.textContent = msg;
+                toastEl.className = 'toast ' + (type || 'info');
+                void toastEl.offsetWidth;
+                toastEl.classList.add('show');
+                toastTimeout = setTimeout(function() {
+                    toastEl.classList.remove('show');
+                }, 3000);
+            }
+
+            function updateProfile() {
+                if (isLoggedIn) {
+                    profileName.textContent = currentUser;
+                    profileId.textContent = userId;
+                    profileTotal.textContent = totalMoney.toLocaleString() + 'd';
+                    settingsName.textContent = currentUser;
+                    settingsId.textContent = userId;
+                    settingsTotal.textContent = totalMoney.toLocaleString() + 'd';
+                    appUserName.textContent = currentUser;
+                    appUserAvatar.textContent = currentUser.charAt(0).toUpperCase();
+                }
+            }
+
+            function loginUser(username) {
+                isLoggedIn = true;
+                currentUser = username;
+                userId = users[username]?.id || generateId();
+                totalMoney = users[username]?.money || 0;
+                if (!users[username]) {
+                    users[username] = { id: userId, money: 0 };
+                    localStorage.setItem('van_nam_users', JSON.stringify(users));
+                }
+                loginScreen.style.display = 'none';
+                appScreen.style.display = 'flex';
+                updateProfile();
+                showToast('Chao mung ' + username + '!', 'success');
+            }
+
+            function logoutUser() {
+                isLoggedIn = false;
+                currentUser = '';
+                appScreen.style.display = 'none';
+                loginScreen.style.display = 'flex';
+                loginUsername.value = '';
+                loginPassword.value = '';
+                loginError.textContent = '';
+                regUsername.value = '';
+                regPassword.value = '';
+                regConfirm.value = '';
+                regError.textContent = '';
+                regSuccess.textContent = '';
+                showToast('Da dang xuat', 'error');
+                closeSidebar();
+                settingsModal.classList.remove('show');
+            }
+
+            // ============================================================
+            //  TOGGLE LOGIN/REGISTER
+            // ============================================================
+            tabLogin.addEventListener('click', function() {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                loginError.textContent = '';
+                regError.textContent = '';
+                regSuccess.textContent = '';
+            });
+
+            tabRegister.addEventListener('click', function() {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+                loginError.textContent = '';
+                regError.textContent = '';
+                regSuccess.textContent = '';
+            });
+
+            // ============================================================
+            //  LOGIN
+            // ============================================================
+            loginBtnMain.addEventListener('click', function() {
+                var user = loginUsername.value.trim();
+                var pass = loginPassword.value.trim();
+                if (!user || !pass) {
+                    loginError.textContent = 'Vui long nhap day du!';
+                    return;
+                }
+                if (users[user] && users[user].password === pass) {
+                    loginUser(user);
+                } else {
+                    loginError.textContent = 'Sai ten dang nhap hoac mat khau!';
+                }
+            });
+
+            loginUsername.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtnMain.click(); });
+            loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtnMain.click(); });
+
+            // ============================================================
+            //  REGISTER
+            // ============================================================
+            registerBtnMain.addEventListener('click', function() {
+                var user = regUsername.value.trim();
+                var pass = regPassword.value.trim();
+                var confirm = regConfirm.value.trim();
+                if (!user || !pass || !confirm) {
+                    regError.textContent = 'Vui long nhap day du!';
+                    regSuccess.textContent = '';
+                    return;
+                }
+                if (pass !== confirm) {
+                    regError.textContent = 'Mat khau xac nhan khong khop!';
+                    regSuccess.textContent = '';
+                    return;
+                }
+                if (pass.length < 4) {
+                    regError.textContent = 'Mat khau phai tu 4 ky tu tro len!';
+                    regSuccess.textContent = '';
+                    return;
+                }
+                if (users[user]) {
+                    regError.textContent = 'Ten dang nhap da ton tai!';
+                    regSuccess.textContent = '';
+                    return;
+                }
+                users[user] = { password: pass, id: generateId(), money: 0 };
+                localStorage.setItem('van_nam_users', JSON.stringify(users));
+                regSuccess.textContent = 'Tao tai khoan thanh cong! Dang nhap ngay.';
+                regError.textContent = '';
+                loginUsername.value = user;
+                loginPassword.value = pass;
+                setTimeout(function() {
+                    tabLogin.click();
+                    loginBtnMain.click();
+                }, 800);
+            });
+
+            regUsername.addEventListener('keydown', function(e) { if (e.key === 'Enter') regPassword.focus(); });
+            regPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') regConfirm.focus(); });
+            regConfirm.addEventListener('keydown', function(e) { if (e.key === 'Enter') registerBtnMain.click(); });
+
+            // ============================================================
+            //  SOCIAL LOGIN
+            // ============================================================
+            loginGoogle.addEventListener('click', function() {
+                var name = 'Google_' + Math.random().toString(36).substring(2, 8);
+                if (!users[name]) {
+                    users[name] = { password: 'google', id: generateId(), money: 0 };
+                    localStorage.setItem('van_nam_users', JSON.stringify(users));
+                }
+                loginUser(name);
+            });
+
+            loginDiscord.addEventListener('click', function() {
+                var name = 'Discord_' + Math.random().toString(36).substring(2, 8);
+                if (!users[name]) {
+                    users[name] = { password: 'discord', id: generateId(), money: 0 };
+                    localStorage.setItem('van_nam_users', JSON.stringify(users));
+                }
+                loginUser(name);
+            });
+
+            // ============================================================
+            //  SIDEBAR
+            // ============================================================
+            function toggleSidebar() {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('show');
+                hamburger.classList.toggle('active');
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+                hamburger.classList.remove('active');
+            }
+
+            hamburger.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', closeSidebar);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebar();
+                    settingsModal.classList.remove('show');
+                    buyModal.classList.remove('show');
+                }
+            });
+
+            // ============================================================
+            //  NAVIGATION
+            // ============================================================
+            document.querySelectorAll('.nav-item[data-page]').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var pageId = this.getAttribute('data-page');
+                    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+                    var target = document.getElementById(pageId);
+                    if (target) target.classList.add('active');
+                    document.querySelectorAll('.nav-item[data-page]').forEach(function(n) { n.classList.remove(
+                        'active'); });
+                    this.classList.add('active');
+                    closeSidebar();
+                });
+            });
+
+            // ============================================================
+            //  SETTINGS GEAR
+            // ============================================================
+            var settingsOpen = false;
+            settingsGear.addEventListener('click', function(e) {
+                e.stopPropagation();
+                settingsOpen = !settingsOpen;
+                settingsModal.classList.toggle('show', settingsOpen);
+                if (settingsOpen) {
+                    settingsGear.classList.add('spinning');
+                    updateProfile();
+                } else {
+                    settingsGear.classList.remove('spinning');
+                }
+            });
+
+            settingsClose.addEventListener('click', function() {
+                settingsModal.classList.remove('show');
+                settingsOpen = false;
+                settingsGear.classList.remove('spinning');
+            });
+
+            settingsLogout.addEventListener('click', function() {
+                settingsModal.classList.remove('show');
+                settingsOpen = false;
+                settingsGear.classList.remove('spinning');
+                logoutUser();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!settingsGear.contains(e.target) && !settingsModal.contains(e.target)) {
+                    settingsModal.classList.remove('show');
+                    settingsOpen = false;
+                    settingsGear.classList.remove('spinning');
+                }
+            });
+
+            logoutBtn.addEventListener('click', logoutUser);
+
+            // ============================================================
+            //  BUY KEY
+            // ============================================================
+            document.querySelectorAll('.buy-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    if (!isLoggedIn) {
+                        showToast('Vui long dang nhap truoc khi mua!', 'error');
+                        return;
+                    }
+                    var product = this.getAttribute('data-product');
+                    buyProductName.textContent = product;
+                    buyModal.classList.add('show');
+                });
+            });
+
+            buyCancel.addEventListener('click', function() {
+                buyModal.classList.remove('show');
+            });
+
+            buyConfirm.addEventListener('click', function() {
+                var product = buyProductName.textContent;
+                var pkg = buyPackage.value;
+                var qty = parseInt(buyQuantity.value) || 1;
+                var email = buyEmail.value.trim();
+
+                if (!email) {
+                    showToast('Vui long nhap email nhan key!', 'error');
+                    return;
+                }
+
+                var price = products[product] ? products[product][pkg] : 0;
+                var total = price * qty;
+
+                // CONG TIEN DA NAP
+                totalMoney += total;
+                if (users[currentUser]) {
+                    users[currentUser].money = totalMoney;
+                    localStorage.setItem('van_nam_users', JSON.stringify(users));
+                }
+                updateProfile();
+
+                var key = 'KEY-' + product.substring(0, 3).toUpperCase() + '-' +
+                    Math.random().toString(36).substring(2, 8).toUpperCase() + '-' +
+                    Date.now().toString(36).toUpperCase();
+
+                showToast('Mua thanh cong! Key: ' + key + ' - Tong: ' + total.toLocaleString() + 'd', 'success');
+                buyModal.classList.remove('show');
+                buyEmail.value = '';
+                buyQuantity.value = 1;
+            });
+
+            // ============================================================
+            //  QR
+            // ============================================================
+            document.querySelectorAll('.qr-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var amount = prompt('Nhap so tien can thanh toan (VNĐ):');
+                    if (amount && parseInt(amount) > 0) {
+                        showToast('QR da tao: STK 0876008142 - MB Bank - ' + parseInt(amount).toLocaleString() +
+                            'd', 'success');
+                    }
+                });
+            });
+
+            // ============================================================
+            //  CHAT BUBBLE
+            // ============================================================
+            chatBubble.addEventListener('click', function() {
+                var supportDiscord = prompt('Nhap Discord ID cua Admin (de hien thi):', 'vanhuy9911');
+                if (supportDiscord && supportDiscord.trim() !== '') {
+                    showToast('Discord Admin: ' + supportDiscord.trim(), 'info');
+                    // Mo Discord
+                    window.open('https://discord.com/users/' + supportDiscord.trim(), '_blank');
+                } else {
+                    showToast('Vui long nhap Discord ID', 'error');
+                }
+            });
+
+            // ============================================================
+            //  KEYBOARD
+            // ============================================================
+            buyModal.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('show');
+            });
+
+            settingsModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                    settingsOpen = false;
+                    settingsGear.classList.remove('spinning');
+                }
+            });
+
+            // ============================================================
+            //  CHECK SESSION
+            // ============================================================
+            console.log('Van Nam Store loaded!');
+            console.log('Users:', Object.keys(users));
+
+            // Neu da co user trong localStorage, hien thi login mac dinh
+            if (Object.keys(users).length > 0) {
+                // Khong tu dong login, de user tu dong nhap
+            }
+
+        })();
+    </script>
+
+</body>
+</html>
