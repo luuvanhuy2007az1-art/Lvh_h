@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard - LXH Cloud</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="glitterCanvas" style="position:fixed; z-index:-1; pointer-events:none;"></canvas>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>LXH CLOUD</h2>
+            <div class="nav-item">📁 Server</div>
+        </div>
+        <div class="main-content">
+            <h2>Tải File Lên</h2>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <p>Bấm vào đây để chọn file</p>
+                <input type="file" id="fileInput" style="display: none;">
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="uploadProgress"></div></div>
+            
+            <div id="shareResult">
+                <p style="color: #3fb950; font-weight: bold; margin-bottom: 10px;">✅ Tải lên thành công! Link chia sẻ:</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="shareLinkInput" readonly style="flex: 1; padding: 10px; background: #0a0a0c; border: 1px solid #444; color: #fff; border-radius: 5px;">
+                    <button onclick="copyLink(document.getElementById('shareLinkInput').value)" class="btn-copy">Copy</button>
+                </div>
+            </div>
+
+            <div class="file-list" id="fileList"></div>
+        </div>
+    </div>
+    <div id="toast" class="toast">Đã copy link!</div>
+    <script type="module" src="dashboard.js"></script>
+</body>
+                                               </html>
